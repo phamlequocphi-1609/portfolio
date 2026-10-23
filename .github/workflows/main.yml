@@ -22,7 +22,7 @@ jobs:
   deploy:
     name: Vercel Deployment
     needs: code-check
-    if: github.ref == 'refs/heads/main' && github.event_name == "push"
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     uses: ./.github/workflows/deploy.yml
     with:
       environment: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && 'production' || 'preview' }}
