@@ -1,0 +1,33 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  code-check:
+    name: Code Quality and Build
+    uses: ./.github/workflows/resuable-check.yml
+    with:
+      node-version: "20"
+      environment: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && 'production' || 'preview' }}
+      artifact-name: "vercel-prebuilt-artifact"
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  deploy:
+    name: Production Deployment
+    needs: code-check
+    if: github.ref == 'refs/heads/main' && github.event_name == "push"
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: "production"
+      artifact-name: "vercel-prebuilt-artifact"
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN  }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
