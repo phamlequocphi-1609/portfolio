@@ -61,6 +61,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: .vercel/output
+          path: .vercel
           include-hidden-files: true
           retention-days: 1
