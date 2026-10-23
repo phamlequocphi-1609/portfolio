@@ -6,7 +6,7 @@ on:
       node-version:
         required: false
         type: string
-        default: "20"
+        default: "22"
       environment:
         required: false
         type: string
@@ -35,7 +35,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: "yarn"
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Run ESLint
         run: yarn lint
       - name: Run Unit Tests
