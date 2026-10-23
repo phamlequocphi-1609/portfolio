@@ -31,7 +31,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: .vercel
+          path: .
+      - name: Verify Prebuilt Artifact
+        run: |
+          ls -la .vercel
+          ls -la .vercel/output
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
