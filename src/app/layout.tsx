@@ -4,6 +4,7 @@ import "./globals.css";
 import { siteUrl } from "@/constants/site-url";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ThemeProvider } from "@/context/theme/theme-context";
+import { CustomCursor } from "@/components/custom-cursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -95,6 +96,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable}`}
     >
       <body className="font-sans antialiased">
+        <CustomCursor />
         <ThemeProvider>
           <JsonLd />
           {children}
