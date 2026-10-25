@@ -3,18 +3,18 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Preloader } from "@/components/preloader";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="relative min-h-screen bg-main text-white selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden">
-      {/* Preloader Overlay with Awwwards-style Wave Curtain Exit */}
+    <div className="relative min-h-screen bg-main text-head selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden">
       <AnimatePresence mode="wait">
         {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
+      <Navbar />
 
-      {/* Ambient Background Lighting */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-cyan-600/15 rounded-full blur-[128px]" />
         <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[140px]" />

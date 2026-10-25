@@ -21,6 +21,23 @@
   --radius: 0.625rem;
 }
 
+.light {
+  --bg-main: #ffffff;
+  --bg-surface: #f8fafc;
+  --bg-elevated: #f1f5f9;
+  --border: #e2e8f0;
+  --border-glow: #cbd5e1;
+
+  --text-head: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+
+  --accent: #6d28d9;
+  --accent-mint: #059669;
+
+  --destructive: #ef4444;
+}
+
 .dark {
   --bg-main: #0c0a15;
   --bg-surface: #141124;
@@ -140,9 +157,6 @@
 body {
   background-color: var(--bg-main);
   color: var(--text-body);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
 }
 
 @layer base {
@@ -152,4 +166,18 @@ body {
   html {
     font-family: var(--font-sans);
   }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
 }
