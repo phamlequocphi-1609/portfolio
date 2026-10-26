@@ -5,6 +5,8 @@ import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/theme/theme-context";
 import { Button } from "@base-ui/react";
 import { Language } from "@/types/navbar";
+import { FullscreenMenu } from "./fullscreen-menu";
+import { LANGUAGES } from "@/constants/lan";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -58,43 +60,31 @@ export function Navbar() {
               aria-label="Language selection"
               className="relative flex items-center rounded-full border border-border bg-surface/90 p-1 backdrop-blur-md shadow-lg shadow-black/30"
             >
-              <Button
-                type="button"
-                onClick={() => setCurrentLang("VI")}
-                className={`relative z-10 rounded-full px-2.5 sm:px-3 py-1 font-mono text-xs font-semibold transition-colors duration-200 cursor-pointer ${
-                  currentLang === "VI"
-                    ? "text-main"
-                    : "text-muted-foreground hover:text-head"
-                }`}
-              >
-                {currentLang === "VI" && (
-                  <motion.span
-                    layoutId="homeActiveLangPill"
-                    className="absolute inset-0 -z-10 rounded-full bg-mint shadow-[0_0_12px_var(--accent-mint)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                VI
-              </Button>
-
-              <Button
-                type="button"
-                onClick={() => setCurrentLang("EN")}
-                className={`relative z-10 rounded-full px-2.5 sm:px-3 py-1 font-mono text-xs font-semibold transition-colors duration-200 cursor-pointer ${
-                  currentLang === "EN"
-                    ? "text-main"
-                    : "text-muted-foreground hover:text-head"
-                }`}
-              >
-                {currentLang === "EN" && (
-                  <motion.span
-                    layoutId="homeActiveLangPill"
-                    className="absolute inset-0 -z-10 rounded-full bg-mint shadow-[0_0_12px_var(--accent-mint)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                EN
-              </Button>
+              {LANGUAGES.map((lang) => (
+                <Button
+                  key={lang}
+                  type="button"
+                  onClick={() => setCurrentLang(lang)}
+                  className={`relative z-10 rounded-full px-2.5 sm:px-3 py-1 font-mono text-xs font-semibold transition-colors duration-200 cursor-pointer ${
+                    currentLang === lang
+                      ? "text-main"
+                      : "text-muted-foreground hover:text-head"
+                  }`}
+                >
+                  {currentLang === lang && (
+                    <motion.span
+                      layoutId="homeActiveLangPill"
+                      className="absolute inset-0 -z-10 rounded-full bg-mint shadow-[0_0_12px_var(--accent-mint)]"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                  {lang}
+                </Button>
+              ))}
             </div>
             <Button
               type="button"
@@ -138,6 +128,12 @@ export function Navbar() {
           </div>
         </div>
       </header>
+
+      <FullscreenMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        theme={theme}
+      />
     </div>
   );
 }
