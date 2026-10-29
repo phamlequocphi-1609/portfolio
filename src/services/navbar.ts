@@ -1,4 +1,4 @@
-import { NavItem } from "@/types/navbar";
+import { NavItem, SocialLink } from "@/types/navbar";
 import axiosClient from "@/config/axios-client";
 import { ApiResponse } from "@/types/api-response";
 
@@ -7,6 +7,15 @@ export const getNavbarMenuItems = async (): Promise<ApiResponse<NavItem>> => {
     return await axiosClient.get("/navbar-items");
   } catch (error) {
     console.error("Error fetching navbar menu items:", error);
+    throw error;
+  }
+};
+
+export const getSocialLinks = async (): Promise<ApiResponse<SocialLink>> => {
+  try {
+    return await axiosClient.get("/social-links");
+  } catch (error) {
+    console.error("Error fetching social links:", error);
     throw error;
   }
 };

@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin, Globe } from "lucide-react";
 import { sidebarVariants } from "@/constants/fullscreen-menu-variants";
 import { Typography } from "@/components/ui/typography";
 import { LiveClock } from "../../live-clock";
-import { SOCIAL_LINKS } from "../fullscreen-menu";
+import { SOCIAL_LINKS, SOCIAL_ICON_MAP } from "@/_mock/social-links";
+import { useSocialLinks } from "../hooks";
 
 export const MenuSidebar = () => {
+  const { data: apiResponse } = useSocialLinks();
+  const socialLinks = apiResponse?.data ?? SOCIAL_LINKS;
   return (
     <motion.aside
       variants={sidebarVariants}
@@ -52,27 +55,36 @@ export const MenuSidebar = () => {
           Find Me Online
         </Typography>
         <div className="flex flex-col divide-y divide-border/60 border-y border-border/60">
-          {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-between py-3.5 transition-colors duration-200 cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <Icon className="h-4 w-4 text-muted-foreground transition-colors duration-200 group-hover:text-mint" />
-                <Typography
-                  tag="span"
-                  variant="code_12_400"
-                  className="sm:text-sm font-medium text-body transition-all duration-200 group-hover:text-head group-hover:translate-x-1"
-                >
-                  {label}
-                </Typography>
-              </div>
-              <ArrowUpRight className="h-4 w-4 text-muted-foreground/40 transition-all duration-200 group-hover:text-mint group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-            </a>
-          ))}
+          {socialLinks.map((item) => {
+            const IconComponent =
+              typeof item.icon === "function"
+                ? item.icon
+                : (typeof item.icon === "string" ? SOCIAL_ICON_MAP[item.icon.toLowerCase()] : null) ||
+                  SOCIAL_ICON_MAP[item.label.toLowerCase()] ||
+                  Globe;
+
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between py-3.5 transition-colors duration-200 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <IconComponent className="h-4 w-4 text-muted-foreground transition-colors duration-200 group-hover:text-mint" />
+                  <Typography
+                    tag="span"
+                    variant="code_12_400"
+                    className="sm:text-sm font-medium text-body transition-all duration-200 group-hover:text-head group-hover:translate-x-1"
+                  >
+                    {item.label}
+                  </Typography>
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-muted-foreground/40 transition-all duration-200 group-hover:text-mint group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+              </a>
+            );
+          })}
         </div>
       </div>
       <div className="flex min-h-[2.25rem] sm:min-h-[2.75rem] lg:min-h-[3.75rem] items-center justify-between border-y border-border/60 py-3.5 sm:py-4 lg:py-4.5 font-mono text-xs text-muted-foreground">

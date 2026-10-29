@@ -1,10 +1,8 @@
 "use client";
 import { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe } from "lucide-react";
 import { useTheme } from "@/context/theme/theme-context";
 import { ThemeColor } from "@/types/navbar";
-import { GithubIcon, LinkedinIcon } from "../icons";
 import {
   MenuNavBackground,
   MenuHeader,
@@ -22,24 +20,6 @@ export interface FullscreenMenuProps {
   onItemClick?: (item: NavItem) => void;
   theme?: ThemeColor;
 }
-
-export const SOCIAL_LINKS = [
-  {
-    label: "GitHub",
-    href: "https://github.com/phamlequocphi-1609",
-    icon: GithubIcon,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/pham-le-quoc-phi/",
-    icon: LinkedinIcon,
-  },
-  {
-    label: "Website",
-    href: "https://phamlequocphi.is-a.dev",
-    icon: Globe,
-  },
-];
 
 export function FullscreenMenu({
   isOpen,
