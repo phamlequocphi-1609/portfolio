@@ -11,7 +11,7 @@ interface TypographyProps {
   variant?: keyof typeof TYPOGRAPHY_VARIANTS;
 }
 
-const Typography = forwardRef<HTMLHeadingElement, TypographyProps>(
+export const Typography = forwardRef<HTMLHeadingElement, TypographyProps>(
   (
     {
       children,

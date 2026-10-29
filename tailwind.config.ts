@@ -71,7 +71,7 @@ const config: Config = {
         sans: ["var(--font-geist-sans)", "sans-serif"],
         mono: ["var(--font-geist-mono)", "monospace"],
         signature: ["var(--font-caveat)", "cursive"],
-        heading: ["var(--font-geist-sans)", "sans-serif"],
+        heading: ["var(--font-heading)", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

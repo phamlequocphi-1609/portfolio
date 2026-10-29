@@ -183,11 +183,11 @@ body {
   z-index: 9999;
 }
 
-@media (pointer: fine) {
+/* @media (pointer: fine) {
   body,
   a,
   button,
   [role="button"] {
     cursor: none !important;
   }
-}
+} */
