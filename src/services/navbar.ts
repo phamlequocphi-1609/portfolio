@@ -4,7 +4,7 @@ import { ApiResponse } from "@/types/api-response";
 
 export const getNavbarMenuItems = async (): Promise<ApiResponse<NavItem>> => {
   try {
-    return await axiosClient.get("/navbar-items");
+    return await axiosClient.get("/navbar?type=items");
   } catch (error) {
     console.error("Error fetching navbar menu items:", error);
     throw error;
@@ -13,7 +13,7 @@ export const getNavbarMenuItems = async (): Promise<ApiResponse<NavItem>> => {
 
 export const getSocialLinks = async (): Promise<ApiResponse<SocialLink>> => {
   try {
-    return await axiosClient.get("/social-links");
+    return await axiosClient.get("/navbar?type=socials");
   } catch (error) {
     console.error("Error fetching social links:", error);
     throw error;
