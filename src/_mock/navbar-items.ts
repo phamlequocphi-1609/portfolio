@@ -3,7 +3,7 @@ import { NavItem } from "@/types/navbar";
 export const DEFAULT_NAV_ITEMS: NavItem[] = [
   {
     title: "Home",
-    href: "#home",
+    href: "/",
     number: "01",
     description: "Overview & Introduction",
   },
