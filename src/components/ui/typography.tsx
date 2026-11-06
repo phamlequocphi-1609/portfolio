@@ -1,8 +1,7 @@
-import React from "react";
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { TYPOGRAPHY_VARIANTS } from "./typography-variant";
 
-interface TypographyProps {
+interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   text?: string;
   className?: string;
   children?: React.ReactNode;
@@ -20,6 +19,7 @@ export const Typography = forwardRef<HTMLHeadingElement, TypographyProps>(
       tag = "p",
       style,
       variant = "caption_12_400",
+      ...props
     },
     ref,
   ) => {
@@ -29,6 +29,7 @@ export const Typography = forwardRef<HTMLHeadingElement, TypographyProps>(
         ref={ref}
         className={`${className} ${TYPOGRAPHY_VARIANTS[variant]}`.trim()}
         style={style}
+        {...props}
       >
         {text ?? children}
       </Tag>

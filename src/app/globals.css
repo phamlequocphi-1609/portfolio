@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --bg-main: #ffffff;
@@ -137,23 +137,6 @@
   }
 }
 
-.dark {
-  --bg-main: #0c0a15;
-  --bg-surface: #141124;
-  --bg-elevated: #1b1630;
-  --border: #251f42;
-  --border-glow: #433878;
-
-  --text-head: #ffffff;
-  --text-body: #c4c1d4;
-  --text-muted: #7d7799;
-
-  --accent: #7c3aed;
-  --accent-mint: #10b981;
-
-  --destructive: #f87171;
-}
-
 body {
   background-color: var(--bg-main);
   color: var(--text-body);
@@ -167,6 +150,13 @@ body {
   html {
     font-family: var(--font-sans);
   }
+}
+
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: none !important;
 }
 
 ::view-transition-old(root),

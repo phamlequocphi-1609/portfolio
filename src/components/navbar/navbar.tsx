@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { flushSync } from "react-dom";
 import { motion } from "framer-motion";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/theme/theme-context";
@@ -17,20 +18,23 @@ export function Navbar() {
   const handleThemeToggle = () => {
     if (isTransitioningRef.current) return;
     const next = theme === "dark" ? "light" : "dark";
-    const isToLight = next === "light";
     if (typeof document === "undefined" || !document.startViewTransition) {
       toggleTheme();
       return;
     }
     isTransitioningRef.current = true;
+    document.documentElement.classList.add("theme-transitioning");
+
     const transition = document.startViewTransition(() => {
-      toggleTheme();
+      document.documentElement.classList.toggle("dark", next === "dark");
+      document.documentElement.classList.toggle("light", next === "light");
+      flushSync(() => {
+        toggleTheme();
+      });
     });
     transition.ready
       .then(() => {
-        const clipPath = isToLight
-          ? ["circle(0% at 100% 0%)", "circle(150% at 100% 0%)"]
-          : ["circle(0% at 0% 100%)", "circle(150% at 0% 100%)"];
+        const clipPath = ["circle(0% at 100% 0%)", "circle(150% at 100% 0%)"];
         const animation = document.documentElement.animate(
           {
             clipPath,
@@ -42,10 +46,12 @@ export function Navbar() {
           },
         );
         animation.finished.finally(() => {
+          document.documentElement.classList.remove("theme-transitioning");
           isTransitioningRef.current = false;
         });
       })
       .catch(() => {
+        document.documentElement.classList.remove("theme-transitioning");
         isTransitioningRef.current = false;
       });
   };
@@ -68,7 +74,7 @@ export function Navbar() {
                   className={`relative z-10 rounded-full px-2.5 sm:px-3 py-1 font-mono text-xs font-semibold transition-colors duration-200 cursor-pointer ${
                     currentLang === lang
                       ? "text-main"
-                      : "text-muted-foreground hover:text-head"
+                      : "text-head/65 hover:text-head"
                   }`}
                 >
                   {currentLang === lang && (
@@ -90,19 +96,19 @@ export function Navbar() {
               type="button"
               aria-label="Toggle theme"
               onClick={handleThemeToggle}
-              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border border-border bg-surface/90 text-muted-foreground hover:text-head backdrop-blur-md shadow-lg shadow-black/30 select-none cursor-pointer transition-colors duration-300"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border border-border bg-surface/90 text-head hover:text-mint backdrop-blur-md shadow-lg shadow-black/30 select-none cursor-pointer transition-colors duration-200 [isolation:isolate] transform-gpu"
             >
               {!isMounted ? (
                 <div className="h-4 w-4" />
               ) : (
                 <motion.div
                   key={theme}
-                  initial={{ rotate: -180, scale: 0.3, opacity: 0 }}
-                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  initial={{ rotate: -90, scale: 0.85 }}
+                  animate={{ rotate: 0, scale: 1 }}
                   transition={{
                     type: "spring",
                     stiffness: 260,
-                    damping: 15,
+                    damping: 18,
                   }}
                 >
                   {theme === "dark" ? (
@@ -121,9 +127,9 @@ export function Navbar() {
               aria-expanded={isMenuOpen}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex h-10 w-10 sm:h-11 sm:w-11 flex-col items-center justify-center gap-1.5 rounded-2xl border border-border bg-surface shadow-lg shadow-black/40 backdrop-blur-md transition-all duration-300 hover:border-mint/60 hover:shadow-[0_0_20px_var(--accent-mint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer group"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 flex-col items-center justify-center gap-1.5 rounded-2xl border border-border bg-surface text-head shadow-lg shadow-black/40 backdrop-blur-md transition-all duration-200 hover:border-mint/60 hover:text-mint hover:shadow-[0_0_20px_var(--accent-mint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer group [isolation:isolate] transform-gpu"
             >
-              <Menu className="h-5 w-5 text-head transition-colors duration-300 group-hover:text-mint" />
+              <Menu className="h-5 w-5 text-head transition-colors duration-200 group-hover:text-mint" />
             </motion.button>
           </div>
         </div>
