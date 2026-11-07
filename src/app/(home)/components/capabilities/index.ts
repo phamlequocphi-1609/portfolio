@@ -1,3 +1,3 @@
 export { CapabilitiesSection } from "./capabilities-section";
-export { CapabilityCard } from "./capability-card";
-export { CapabilitiesBarrel } from "./capabilities-barrel";
+export { CapabilityCard } from "./components/capability-card";
+export { CapabilitiesBarrel } from "./components/capabilities-barrel";

@@ -2,25 +2,33 @@
 import { memo, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Autoplay } from "swiper/modules";
-import { CapabilityCard } from "./capability-card";
-import { CapabilityItem } from "./capabilities-section";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
+import { CapabilityCard } from "./capability-card";
+import { CapabilityItem } from "@/types/capability";
 
 interface CapabilitiesBarrelProps {
   items: CapabilityItem[];
   autoPlayInterval?: number;
 }
 
+interface BarrelSlideItem extends CapabilityItem {
+  slideId: string;
+}
+
 export const CapabilitiesBarrel = memo(
-  ({ items, autoPlayInterval = 2000 }: CapabilitiesBarrelProps) => {
-    const displayItems = useMemo(() => {
-      if (!items || items.length == 0) return [];
-      const cloned = [...items];
-      while (cloned.length < 6) {
-        return [...cloned, ...items];
-      }
-      return cloned;
+  ({ items, autoPlayInterval = 3000 }: CapabilitiesBarrelProps) => {
+    const displayItems = useMemo<BarrelSlideItem[]>(() => {
+      if (!items || items.length === 0) return [];
+      const repeatCount = Math.ceil(12 / items.length);
+
+      return Array.from({ length: repeatCount }, (_, i) => i + 1).flatMap(
+        (round) =>
+          items.map((item) => ({
+            ...item,
+            slideId: `capability-${item.id}-round-${round}`,
+          })),
+      );
     }, [items]);
 
     return (
@@ -46,9 +54,9 @@ export const CapabilitiesBarrel = memo(
           }}
           className="w-full !overflow-visible py-6 [&_.swiper-slide:not(.swiper-slide-active):not(.swiper-slide-prev):not(.swiper-slide-next)]:!opacity-0 [&_.swiper-slide:not(.swiper-slide-active):not(.swiper-slide-prev):not(.swiper-slide-next)]:!pointer-events-none [&_.swiper-slide:not(.swiper-slide-active):not(.swiper-slide-prev):not(.swiper-slide-next)]:!invisible"
         >
-          {displayItems.map((item, index) => (
+          {displayItems.map((item) => (
             <SwiperSlide
-              key={`${item.title}-${index}`}
+              key={item.slideId}
               style={{ width: "275px", height: "355px" }}
               className="!w-[250px] sm:!w-[280px] !h-[330px] sm:!h-[360px] transition-all duration-500 rounded-2xl overflow-hidden"
             >

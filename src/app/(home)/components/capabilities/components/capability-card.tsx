@@ -2,7 +2,7 @@
 import { memo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Typography } from "@/components/ui";
-import { CapabilityItem } from "./capabilities-section";
+import { CapabilityItem } from "@/types/capability";
 
 interface CapabilityCardProps {
   item: CapabilityItem;
