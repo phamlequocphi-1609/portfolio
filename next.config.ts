@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     agentFeedback: true,
+    optimizePackageImports: [
+      "lucide-react",
+      "@base-ui/react",
+      "framer-motion",
+      "dayjs",
+    ],
   },
   cacheComponents: true,
   partialPrefetching: true,
@@ -16,7 +22,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    qualities: [75, 95],
+    qualities: [75, 85, 95],
   },
 };
 

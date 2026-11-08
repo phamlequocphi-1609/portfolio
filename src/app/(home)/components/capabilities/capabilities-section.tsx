@@ -1,8 +1,9 @@
 "use client";
-import { useMemo, Suspense } from "react";
+import { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Typography } from "@/components/ui";
-import { CapabilitiesBarrel } from "./components/capabilities-barrel";
+import { CapabilitiesSkeleton } from "./components/capabilities-skeleton";
 import {
   TITLE_CAPABILITIES,
   titleContainerVariants,
@@ -15,6 +16,17 @@ import {
 import { CAPABILITIES_ITEMS } from "@/_mock/capabilities-items";
 import { useCapabilities } from "./hooks/use-capabilities";
 import { CapabilityItem } from "@/types/capability";
+
+const CapabilitiesBarrel = dynamic(
+  () =>
+    import("./components/capabilities-barrel").then(
+      (mod) => mod.CapabilitiesBarrel,
+    ),
+  {
+    ssr: false,
+    loading: () => <CapabilitiesSkeleton />,
+  },
+);
 
 const MotionTypography = motion(Typography);
 
@@ -70,9 +82,7 @@ export const CapabilitiesSection = () => {
         </MotionTypography>
       </div>
 
-      <Suspense fallback={<div className="w-full min-h-[300px]" />}>
-        <CapabilitiesBarrel items={capabilities} />
-      </Suspense>
+      <CapabilitiesBarrel items={capabilities} />
     </section>
   );
 };

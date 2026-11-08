@@ -6,9 +6,15 @@ import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/theme/theme-context";
 import { Button } from "@base-ui/react";
 import { Language } from "@/types/navbar";
-import { FullscreenMenu } from "./fullscreen-menu";
 import { LANGUAGES } from "@/constants/lan";
+import dynamic from "next/dynamic";
 
+const FullscreenMenu = dynamic(
+  () => import("./fullscreen-menu").then((mod) => mod.FullscreenMenu),
+  {
+    ssr: false,
+  },
+);
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [currentLang, setCurrentLang] = useState<Language>("EN");

@@ -16,12 +16,9 @@ export const HeroAvatar = () => {
         aria-hidden="true"
         className="absolute -inset-1 rounded-[28px] blur-md opacity-30 group-hover:opacity-65 transition-opacity duration-500 overflow-hidden pointer-events-none"
       >
-        <motion.span
-          style={{ x: "-50%", y: "-50%" }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-          className="absolute left-1/2 top-1/2 w-[240%] aspect-square [background:conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_270deg,var(--accent)_360deg)]"
-        />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[240%] aspect-square">
+          <span className="block w-full h-full [background:conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_270deg,var(--accent)_360deg)] animate-[spin_5s_linear_infinite] will-change-transform" />
+        </div>
       </div>
 
       <motion.div
@@ -33,12 +30,9 @@ export const HeroAvatar = () => {
           aria-hidden="true"
           className="absolute inset-0 overflow-hidden pointer-events-none"
         >
-          <motion.span
-            style={{ x: "-50%", y: "-50%" }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-            className="absolute left-1/2 top-1/2 w-[240%] aspect-square [background:conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_270deg,var(--accent)_360deg)] opacity-75 group-hover:opacity-100 transition-opacity duration-300"
-          />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[240%] aspect-square">
+            <span className="block w-full h-full [background:conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_270deg,var(--accent)_360deg)] opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-[spin_5s_linear_infinite] will-change-transform" />
+          </div>
         </div>
 
         <div className="relative rounded-3xl p-2 sm:p-2.5 bg-surface/95 dark:bg-surface/90 backdrop-blur-md border border-border/60 group-hover:border-border-glow shadow-lg group-hover:shadow-2xl transition-all duration-300">
@@ -48,8 +42,8 @@ export const HeroAvatar = () => {
               alt="Pham Le Quoc Phi - Frontend Developer"
               fill
               priority
-              quality={95}
-              sizes="(max-width: 768px) 100vw, 800px"
+              quality={85}
+              sizes="(max-width: 640px) 280px, (max-width: 1024px) 310px, 335px"
               className="object-cover scale-[1.65] origin-[50%_72%] transition-transform duration-700 ease-out group-hover:scale-[1.72]"
             />
 

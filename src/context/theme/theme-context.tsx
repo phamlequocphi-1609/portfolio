@@ -1,7 +1,13 @@
 "use client";
 import { useThemeStore } from "@/stores";
 import { ThemeColor } from "@/types/navbar";
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 
 interface ThemeContextType {
   theme: ThemeColor;
@@ -29,17 +35,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [theme, isMounted]);
 
+  const value = useMemo(
+    () => ({
+      theme,
+      toggleTheme,
+      setTheme,
+      isMounted,
+    }),
+    [theme, toggleTheme, setTheme, isMounted],
+  );
   return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        toggleTheme,
-        setTheme,
-        isMounted,
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 

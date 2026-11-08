@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   containerStagger,
@@ -10,33 +10,52 @@ import {
 interface PreloaderProps {
   onComplete: () => void;
 }
+
 export function Preloader({ onComplete }: PreloaderProps) {
   const [percent, setPercent] = useState<number>(0);
+  const onCompleteRef = useRef(onComplete);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   useEffect(() => {
     const duration = 1800;
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
+    let startTime: number | null = null;
+    let frameId: number;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const animateProgress = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const currentPercent = Math.floor((1 - Math.pow(1 - progress, 3)) * 100);
+
       setPercent(currentPercent);
-      if (progress >= 1) {
-        clearInterval(interval);
-        setTimeout(onComplete, 400);
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(animateProgress);
+      } else {
+        timeoutId = setTimeout(() => {
+          onCompleteRef.current();
+        }, 400);
       }
-    }, 20);
+    };
+
+    frameId = requestAnimationFrame(animateProgress);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(frameId);
+      clearTimeout(timeoutId);
     };
-  }, [onComplete]);
+  }, []);
 
   return (
     <motion.div
       variants={slideDownScale}
       initial="initial"
       exit="exit"
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#090D16] text-white select-none "
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#090D16] text-white select-none"
     >
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <motion.div
@@ -103,21 +122,15 @@ export function Preloader({ onComplete }: PreloaderProps) {
             <span className="text-[#7483A3] uppercase tracking-widest">
               {percent === 100 ? "Ready" : "Loading..."}
             </span>
-            <motion.span
-              key={percent}
-              initial={{ opacity: 0.5, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-[#10B981] font-medium tabular-nums"
-            >
+            <span className="text-[#10B981] font-medium tabular-nums transition-opacity duration-150">
               {percent}%
-            </motion.span>
+            </span>
           </div>
 
           <div className="relative w-full h-1 bg-white/10 overflow-hidden">
-            <motion.div
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-transparent via-[#10B981] to-[#10B981]"
+            <div
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-transparent via-[#10B981] to-[#10B981] transition-[width] duration-75 ease-linear will-change-[width]"
               style={{ width: `${percent}%` }}
-              transition={{ ease: "linear", duration: 0.1 }}
             />
           </div>
         </motion.div>

@@ -28,7 +28,7 @@ export function FullscreenMenu({
   onItemClick,
   theme: propTheme,
 }: FullscreenMenuProps) {
-  const { data: apiResponse } = useNavbarItems();
+  const { data: apiResponse } = useNavbarItems(isOpen);
   const navItems = propItems ?? apiResponse?.data ?? DEFAULT_NAV_ITEMS;
 
   const { theme: contextTheme } = useTheme();
