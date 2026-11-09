@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Typography } from "@/components/ui";
 import { CapabilityItem } from "@/types/capability";
-
+import { motion } from "framer-motion";
 interface CapabilityCardProps {
   item: CapabilityItem;
   index?: number;
@@ -23,7 +23,7 @@ export const CapabilityCard = memo(
           }}
           className={`absolute inset-0 overflow-visible rounded-2xl p-4 sm:p-4.5 bg-surface/95 dark:bg-surface/90 backdrop-blur-md border ring-0 transition-all duration-500 flex flex-col justify-between select-none ${
             isActive
-              ? "border-accent/60 shadow-[0_10px_30px_rgba(59,130,246,0.25)] dark:shadow-[0_10px_35px_rgba(124,58,237,0.3)]"
+              ? "border-accent/60 border-2 shadow-[0_10px_30px_rgba(59,130,246,0.25)] dark:shadow-[0_10px_35px_rgba(124,58,237,0.3)]"
               : "border-border/80 shadow-md hover:border-border-glow"
           }`}
         >
@@ -34,13 +34,56 @@ export const CapabilityCard = memo(
               >
                 <Icon className="w-3.5 h-3.5" />
               </div>
-              <CardTitle className="p-0 text-center w-full min-h-[2rem] flex items-center justify-center">
-                <Typography
-                  tag="h3"
-                  variant="title_16_600"
-                  text={item.title}
-                  className="text-head text-xs sm:text-[13px] font-bold tracking-tight text-center text-balance leading-snug"
-                />
+              <CardTitle className="p-0 text-center w-full min-h-[2.5rem] flex items-center justify-center">
+                <motion.div
+                  initial={false}
+                  animate={
+                    isActive
+                      ? {
+                          y: 0,
+                          opacity: 1,
+                          scale: 1,
+                          filter: "blur(0px)",
+                        }
+                      : {
+                          y: 5,
+                          opacity: 0.65,
+                          scale: 0.96,
+                          filter: "blur(0.3px)",
+                        }
+                  }
+                  transition={{
+                    type: "spring",
+                    stiffness: 320,
+                    damping: 26,
+                    mass: 0.7,
+                  }}
+                  className="w-full flex flex-col items-center justify-center gap-1.5"
+                >
+                  <Typography
+                    tag="h3"
+                    variant="title_16_600"
+                    text={item.title}
+                    className={`text-xs sm:text-[13px] font-bold tracking-tight text-center text-balance leading-snug transition-colors duration-300 ${
+                      isActive
+                        ? "text-head dark:text-white"
+                        : "text-head/65 dark:text-head/60"
+                    }`}
+                  />
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      width: isActive ? 20 : 0,
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25,
+                    }}
+                    className="h-0.5 rounded-full bg-accent/60"
+                  />
+                </motion.div>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
