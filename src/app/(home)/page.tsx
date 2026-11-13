@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Preloader } from "@/components/preloader";
 import { Navbar } from "@/components/navbar";
-import { HeroSection } from "./components";
+import { ContactCta, HeroSection } from "./components";
 import { CapabilitiesSection } from "./components/capabilities";
 import { ScrollProgress } from "@/components/scroll-progress";
 
@@ -20,6 +20,7 @@ export default function HomePage() {
       <main className="relative z-10">
         <HeroSection key={isLoading ? "loading" : "ready"} />
         <CapabilitiesSection />
+        <ContactCta />
       </main>
     </div>
   );
