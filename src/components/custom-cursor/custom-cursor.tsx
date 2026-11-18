@@ -1,92 +1,197 @@
 "use client";
-import { useEffect, useState, useRef, memo } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useEffect, useCallback, useMemo, memo } from "react";
 
-const RING_SPRING = { damping: 30, stiffness: 400, mass: 0.4 };
+interface CustomCursorProps {
+  trailColor?: string;
+  trailLength?: number;
+  trailWidth?: number;
+  smoothness?: number;
+  damping?: number;
+  fadeOnLeave?: boolean;
+}
+export const CustomCursor = memo(function CustomCursor({
+  trailColor = "#0057FF",
+  trailLength = 30,
+  trailWidth = 6,
+  smoothness = 0.15,
+  damping = 0.85,
+  fadeOnLeave = true,
+}: CustomCursorProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const pointsRef = useRef<{ x: number; y: number }[]>([]);
+  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const smoothMouseRef = useRef({ x: -9999, y: -9999 });
+  const velocityRef = useRef({ x: 0, y: 0 });
+  const isInsideRef = useRef(false);
+  const opacityRef = useRef(0);
+  const rafRef = useRef(0);
+  const initializedRef = useRef(false);
 
-export const CustomCursor = memo(function CustomCursor() {
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-
-  const smoothX = useSpring(cursorX, RING_SPRING);
-  const smoothY = useSpring(cursorY, RING_SPRING);
-
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const hasAppearedRef = useRef<boolean>(false);
-
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      !window.matchMedia("(pointer: fine)").matches
-    ) {
-      return;
-    }
-
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-
-      if (!hasAppearedRef.current) {
-        hasAppearedRef.current = true;
-        setIsVisible(true);
+  const hexToRgb = useCallback((hex: string) => {
+    if (hex.startsWith("rgba") || hex.startsWith("rgb")) {
+      const match = hex.match(/[\d.]+/g);
+      if (match) {
+        return {
+          r: parseInt(match[0]),
+          g: parseInt(match[1]),
+          b: parseInt(match[2]),
+          a: match[3] ? parseFloat(match[3]) : 1,
+        };
       }
+    }
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+          a: 1,
+        }
+      : { r: 0, g: 87, b: 255, a: 1 };
+  }, []);
+
+  const rgb = useMemo(() => hexToRgb(trailColor), [trailColor, hexToRgb]);
+  const lerpFactor = Math.max(0.05, Math.min(1, smoothness));
+  const dampFactor = Math.max(0, Math.min(0.99, damping));
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target instanceof Element ? e.target : null;
-      if (!target) return;
-      const isClickable = target.closest(
-        "a, button, [role='button'], input, textarea, select, .cursor-pointer",
-      );
-      setIsHovered(!!isClickable);
+    resize();
+    window.addEventListener("resize", resize);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+      if (!initializedRef.current) {
+        smoothMouseRef.current = { ...mouseRef.current };
+        initializedRef.current = true;
+      }
+      isInsideRef.current = true;
     };
 
-    const handleMouseDown = () => setIsClicked(true);
-    const handleMouseUp = () => setIsClicked(false);
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => {
+      isInsideRef.current = false;
+    };
 
-    window.addEventListener("mousemove", moveCursor, { passive: true });
-    window.addEventListener("mouseover", handleMouseOver, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    const handleMouseEnter = () => {
+      isInsideRef.current = true;
+    };
+
+    document.addEventListener("mousemove", handleMouseMove, true);
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
+    const animate = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      const dx = mouseRef.current.x - smoothMouseRef.current.x;
+      const dy = mouseRef.current.y - smoothMouseRef.current.y;
+      velocityRef.current.x =
+        velocityRef.current.x * dampFactor + dx * lerpFactor;
+      velocityRef.current.y =
+        velocityRef.current.y * dampFactor + dy * lerpFactor;
+      smoothMouseRef.current.x += velocityRef.current.x;
+      smoothMouseRef.current.y += velocityRef.current.y;
+
+      if (isInsideRef.current && initializedRef.current) {
+        opacityRef.current = Math.min(1, opacityRef.current + 0.06);
+      } else if (fadeOnLeave) {
+        opacityRef.current = Math.max(0, opacityRef.current - 0.03);
+      }
+
+      if (
+        initializedRef.current &&
+        (isInsideRef.current || opacityRef.current > 0.01)
+      ) {
+        pointsRef.current.unshift({
+          x: smoothMouseRef.current.x,
+          y: smoothMouseRef.current.y,
+        });
+      }
+
+      if (pointsRef.current.length > trailLength) {
+        pointsRef.current.length = trailLength;
+      }
+
+      const pts = pointsRef.current;
+      if (pts.length > 2 && opacityRef.current > 0.01) {
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        for (let i = pts.length - 3; i >= 0; i--) {
+          const t = i / (pts.length - 1);
+          const width = trailWidth * (1 - t);
+          const alpha = (1 - t) * opacityRef.current * rgb.a;
+          if (width < 0.1) continue;
+
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+          ctx.lineWidth = width;
+          ctx.moveTo(pts[i].x, pts[i].y);
+
+          const nextMidX = (pts[i + 1].x + pts[i + 2].x) / 2;
+          const nextMidY = (pts[i + 1].y + pts[i + 2].y) / 2;
+          ctx.quadraticCurveTo(pts[i + 1].x, pts[i + 1].y, nextMidX, nextMidY);
+          ctx.stroke();
+        }
+
+        if (pts.length > 0) {
+          const speed = Math.sqrt(
+            velocityRef.current.x ** 2 + velocityRef.current.y ** 2,
+          );
+          const dotSize = Math.min(trailWidth * 1.4, trailWidth + speed * 0.08);
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacityRef.current * rgb.a})`;
+          ctx.arc(pts[0].x, pts[0].y, dotSize / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener("mouseover", handleMouseOver);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resize);
+      document.removeEventListener("mousemove", handleMouseMove, true);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
+      initializedRef.current = false;
     };
-  }, [cursorX, cursorY]);
+  }, [fadeOnLeave, trailLength, trailWidth, rgb, lerpFactor, dampFactor]);
 
   return (
-    <>
-      <motion.div
-        className={`pointer-events-none fixed top-0 left-0 z-[9998] h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${
-          isHovered ? "border-mint/80 bg-mint/5" : "border-white/60"
-        }`}
-        style={{ x: smoothX, y: smoothY }}
-        animate={{
-          scale: isClicked ? 0.8 : isHovered ? 1.8 : 1,
-          opacity: isVisible ? 1 : 0,
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      />
-      <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[9999] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference"
-        style={{ x: cursorX, y: cursorY }}
-        animate={{
-          scale: isClicked ? 0.5 : isHovered ? 0.3 : 1,
-          opacity: isVisible ? (isHovered ? 0.4 : 1) : 0,
-        }}
-        transition={{ type: "spring", stiffness: 600, damping: 30 }}
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        pointerEvents: "none",
+        zIndex: 99999,
+      }}
+    />
   );
 });
+
+CustomCursor.displayName = "CustomCursor";

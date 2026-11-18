@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { ContactCta, HeroSection } from "./components";
 import { CapabilitiesSection } from "./components/capabilities";
 import { ScrollProgress } from "@/components/scroll-progress";
+import { Footer } from "@/components/footer";
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +23,7 @@ export default function HomePage() {
         <CapabilitiesSection />
         <ContactCta />
       </main>
+      <Footer />
     </div>
   );
 }

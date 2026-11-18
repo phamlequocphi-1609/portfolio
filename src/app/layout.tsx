@@ -94,9 +94,10 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable}`}
+      suppressHydrationWarning
     >
       <body className="font-sans antialiased" suppressHydrationWarning>
-        {/* <CustomCursor /> */}
+        <CustomCursor />
         <QueryProvider>
           <ThemeProvider>
             <JsonLd />
