@@ -38,13 +38,13 @@ export const HeroAvatar = () => {
         <div className="relative rounded-3xl p-2 sm:p-2.5 bg-surface/95 dark:bg-surface/90 backdrop-blur-md border border-border/60 group-hover:border-border-glow shadow-lg group-hover:shadow-2xl transition-all duration-300">
           <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-elevated">
             <Image
-              src="/avt_phi.jpg"
+              src="/avatar.jpg"
               alt="Pham Le Quoc Phi - Frontend Developer"
               fill
               priority
               quality={85}
               sizes="(max-width: 640px) 280px, (max-width: 1024px) 310px, 335px"
-              className="object-cover scale-[1.65] origin-[50%_72%] transition-transform duration-700 ease-out group-hover:scale-[1.72]"
+              className="object-cover scale-[1.1] origin-[50%_72%] transition-transform duration-700 ease-out group-hover:scale-[1.72]"
             />
 
             <div

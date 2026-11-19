@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 import { siteUrl } from "@/constants/site-url";
@@ -25,16 +25,33 @@ const caveat = Caveat({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    {
+      media: "(prefers-color-schema: light)",
+      color: "#fffff",
+    },
+    {
+      media: "(prefers-color-schema: dark)",
+      color: "#09090b",
+    },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Pham Le Quoc Phi | Software Developer",
+    default:
+      "Phạm Lê Quốc Phi - Pham Le Quoc Phi | Software Developer Portfolio",
     template: "%s | Pham Le Quoc Phi",
   },
   description:
     "Portfolio of Pham Le Quoc Phi - Software Developer specializing in modern web applications, creative UI/UX, and high-performance solutions.",
   keywords: [
     "Pham Le Quoc Phi",
+    "Phạm Lê Quốc Phi",
     "Software Developer",
     "Frontend Developer",
     "Fullstack Developer",
@@ -46,6 +63,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Pham Le Quoc Phi", url: siteUrl }],
   creator: "Pham Le Quoc Phi",
+  publisher: "Pham Le Quoc Phi",
   alternates: {
     canonical: "/",
   },
@@ -53,13 +71,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en",
     url: siteUrl,
-    title: "Pham Le Quoc Phi | Frontend Developer",
+    title: "Phạm Lê Quốc Phi - Pham Le Quoc Phi | Software Developer Portfolio",
     description:
       "Showcasing high-performance web applications, skills and experience of Pham Le Quoc Phi",
-    siteName: "Pham Le Quoc Phi Portfolio",
+    siteName: "Phạm Lê Quốc Phi - Pham Le Quoc Phi Portfolio",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image-seo.png",
         width: 1200,
         height: 630,
         alt: "Pham Le Quoc Phi Portfolio",
@@ -68,9 +86,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pham Le Quoc Phi | Frontend Developer",
-    description: "Frontend Developer Portfolio",
-    images: ["/og-image.png"],
+    title: "Phạm Lê Quốc Phi - Pham Le Quoc Phi | Software Developer Portfolio",
+    description:
+      "Portfolio of Pham Le Quoc Phi - Software Developer specializing in modern web applications, creative UI/UX, and high-performance solutions.",
+    images: ["/og-image-seo.png"],
   },
   robots: {
     index: true,
