@@ -43,8 +43,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default:
-      "Phạm Lê Quốc Phi - Pham Le Quoc Phi | Software Developer Portfolio",
+    default: "Pham Le Quoc Phi | Software Developer Portfolio",
     template: "%s | Pham Le Quoc Phi",
   },
   description:
@@ -71,10 +70,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en",
     url: siteUrl,
-    title: "Phạm Lê Quốc Phi - Pham Le Quoc Phi | Software Developer Portfolio",
+    title: "Pham Le Quoc Phi | Software Developer Portfolio",
     description:
       "Showcasing high-performance web applications, skills and experience of Pham Le Quoc Phi",
-    siteName: "Phạm Lê Quốc Phi - Pham Le Quoc Phi Portfolio",
+    siteName: "Pham Le Quoc Phi Portfolio",
     images: [
       {
         url: "/og-image-seo.png",

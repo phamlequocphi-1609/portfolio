@@ -18,7 +18,7 @@ export function JsonLd() {
         "@type": "Website",
         "@id": websiteId,
         url: siteUrl,
-        name: "Phạm Lê Quốc Phi - Pham Le Quoc Phi Portfolio",
+        name: "Pham Le Quoc Phi Portfolio",
         description:
           "Portfolio of Pham Le Quoc Phi - Software Developer specializing in modern web applications, creative UI/UX, and high-performance solutions.",
         publisher: {

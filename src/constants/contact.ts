@@ -20,14 +20,15 @@ export const SOCIAL_ITEMS: SocialItem[] = [
     label: "GitHub",
     href: GITHUB_URL,
     icon: GithubIcon,
-    className: "text-head bg-head/5 hover:bg-head/15 hover:border-head/40",
+    className:
+      "text-head bg-head/5 border-head/10 hover:bg-head/10 hover:border-head/30 transition-colors",
   },
   {
     label: "LinkedIn",
     href: LINKED_URL,
     icon: LinkedinIcon,
     className:
-      "text-linkedin bg-linkedin/10 hover:bg-linkedin/20 hover:border-linkedin/50",
+      "text-sky-700 bg-sky-500/10 border-sky-500/20 hover:bg-sky-500/15 hover:border-sky-500/40 dark:text-sky-400 dark:bg-sky-400/10 dark:hover:bg-sky-400/20 transition-colors",
   },
   {
     label: "Gmail",

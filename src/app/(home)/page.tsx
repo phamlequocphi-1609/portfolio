@@ -9,7 +9,7 @@ import { ScrollProgress } from "@/components/scroll-progress";
 import { Footer } from "@/components/footer";
 
 export default function HomePage() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   return (
     <div className="relative min-h-screen bg-main text-head  overflow-x-hidden">
