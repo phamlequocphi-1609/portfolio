@@ -3,3 +3,9 @@ export interface ApiResponse<T> {
   message: string;
   data: T[];
 }
+
+export interface ApiErrorPayload {
+  message?: string;
+  status?: number;
+  data?: unknown;
+}
